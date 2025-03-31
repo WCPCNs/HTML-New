@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Form Submission to Google Sheets</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input, button { padding: 10px; margin: 8px 0; width: 100%; max-width: 300px; }
+  </style>
+</head>
+<body>
+  <h2>Book a Slot</h2>
+  <form id="data-form">
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="tel" name="phone" placeholder="Phone Number" required>
+    <input type="date" name="date" required>
+    <input type="time" name="time" required>
+    <button type="submit">Submit</button>
+    <p id="response-msg"></p>
+  </form>
+
+  <script>
+    const scriptURL = "YOUR_SCRIPT_URL_HERE"; // Replace with your Web App URL
+    const form = document.getElementById("data-form");
+    const msg = document.getElementById("response-msg");
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+
+      const data = {
+        email: form.email.value,
+        phone: form.phone.value,
+        date: form.date.value,
+        time: form.time.value
+      };
+
+      fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => res.json())
+      .then(response => {
+        msg.innerText = "Submitted successfully!";
+        form.reset();
+      })
+      .catch(err => {
+        msg.innerText = "Submission failed!";
+        console.error("Error:", err);
+      });
+    });
+  </script>
+</body>
+</html>
